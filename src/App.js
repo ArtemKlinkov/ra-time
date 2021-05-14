@@ -26,31 +26,33 @@ const MIN = 1000 * 60;
 const HOUR = MIN * 60;
 const DAY = HOUR * 24;  
 
-class DateTimePretty extends Component {
-  getRelativeTime = () => {
-    const currentDate = new Date();
-    const componentDate = new Date(this.props.date);
-    const timeDiff = currentDate - componentDate;
+const withHOC = (Component) => {
+    return class extends React.Component {
+        getRelativeTime = () => {
+            const currentDate = new Date();
+            const componentDate = new Date(this.props.date);
+            const timeDiff = currentDate - componentDate;
 
-    const minsDiff = Math.floor(timeDiff / MIN);
-    const hoursDiff = Math.floor(timeDiff / HOUR);
-    const daysDiff = Math.floor(timeDiff / DAY);
+            const minsDiff = Math.floor(timeDiff / MIN);
+            const hoursDiff = Math.floor(timeDiff / HOUR);
+            const daysDiff = Math.floor(timeDiff / DAY);
 
-    if (hoursDiff < 1) {
-      return `${minsDiff} ${displayDate(minsDiff, minutes)} назад`;
-    } else if (daysDiff < 1) {
-      return `${hoursDiff} ${displayDate(hoursDiff, hours)} назад`;
-    }
-    return `${daysDiff} ${displayDate(daysDiff, days)} назад`;
-  };
+            if (hoursDiff < 1) {
+            return `${minsDiff} ${displayDate(minsDiff, minutes)} назад`;
+            } else if (daysDiff < 1) {
+            return `${hoursDiff} ${displayDate(hoursDiff, hours)} назад`;
+            }
+            return `${daysDiff} ${displayDate(daysDiff, days)} назад`;
+        };
 
-  render() {
-    const { date } = this.props;
-    return <DateTime date={this.getRelativeTime(date)} />;
-  }
+        render() {
+            const { date } = this.props;
+            return <Component date={this.getRelativeTime(date)} />;
+        }
+    };
 };
 
-// const DateTimePretty = dateHOC(DateTime);
+const DateTimePretty = withHOC(DateTime);
 
 
 function Video(props) {
